@@ -1,37 +1,34 @@
 #!/bin/bash
-if [ $# -lt 4 ]; then
-    echo "Usage: copy_and_rename.sh src_dir_and_src_proj_dir/ old_project_name dst_dir/ new_project_name"
+
+if [ $# -lt 3 ]; then
+    echo "Usage: copy_and_rename.sh src_proj_dir/ old_project_name new_project_name"
     echo "Note that name of src_proj_dir may not be equal to old_project_name in .project"
     echo "e.g) copy_and_rename.sh /c/pleiades-ssj2023/workspace/kcg_ssj_Session/ Session /c/tmp/ Session2"
     exit 0
 fi
 
-# Add trailing slash
+# Remove trailing slash if exists
 SRC=$1
 SRC=${SRC%/}
-SRC="$SRC/"
-
-SRCPROJDIR=`basename ${SRC}`
+PARENTDIR=`dirname ${SRC}`
+PARENTDIR="$PARENTDIR/"
 
 OLDPROJNAME=$2
+NEWPROJNAME=$3
+NEWPROJDIR="$PARENTDIR$NEWPROJNAME/"
 
-DST=$3
-DST=${DST%/}
-DST="$DST/"
-
-NEWPROJNAME=$4
-NEWPROJDIR="${DST}$4/"
-
-if [[ $SRC = $NEWPROJDIR ]]; then
+if [[ $OLDPROJNAME = $NEWPROJNAME ]]; then
     echo "New proj must not equal to src proj"
     exit 0
 fi
-echo "copying $SRC to $DST ..."
+echo "copying $OLDPROJNAME to $NEWPROJNAME ..."
 
-cp -r $SRC $DST
+mkdir $NEWPROJDIR
+COPYFROM="$SRC/."
+cp -r $COPYFROM $NEWPROJDIR
 
-echo "renaming ${DST}$SRCPROJDIR to ${DST}$NEWPROJNAME..."
-mv ${DST}$SRCPROJDIR ${DST}$NEWPROJNAME
+#echo "renaming ${DST}$SRCPROJDIR to ${DST}$NEWPROJNAME..."
+#mv ${DST}$SRCPROJDIR ${DST}$NEWPROJNAME
 
 echo "removing ${NEWPROJDIR}bin..."
 rm -rf "${NEWPROJDIR}bin"
@@ -54,4 +51,3 @@ mv ${NEWPROJDIR}.settings/${OLDPROJNAME}-remotedebug.launch ${NEWPROJDIR}.settin
 echo "# for WST.."
 sed -i "s/$OLDPROJNAME/$NEWPROJNAME/g" ${NEWPROJDIR}.settings/org.eclipse.wst.common.component
 echo "completed!"
-
