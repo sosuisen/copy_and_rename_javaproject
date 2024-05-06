@@ -3,7 +3,7 @@
 if [ $# -lt 3 ]; then
     echo "Usage: copy_and_rename.sh src_proj_dir/ old_project_name new_project_name"
     echo "Note that name of src_proj_dir may not be equal to old_project_name in .project"
-    echo "e.g) copy_and_rename.sh /c/pleiades-ssj2023/workspace/kcg_ssj_Session/ Session /c/tmp/ Session2"
+    echo "e.g) copy_and_rename.sh /c/pleiades-ssj2023/workspace/kcg_ssj_Session/ Session Session2"
     exit 0
 fi
 
